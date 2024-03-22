@@ -1,26 +1,69 @@
-const inquirer = require('inquirer');
-const inquirer = require('inquirer@8.2.4');
+// const mysql = require('mysql2');
+// const connection = mysql.createConnection(
+//     {
+//         host: 'localhost',
+//         user: 'root',
+//         password: 'Help00$12',
+//         database: 'employees1_db'
+//     },
+//     console.log(`Connected to the employees1_db database.`)
+// );
 
-inquirer
-  .prompt([
-    {
-      type: 'input',
-      message: 'What is your user name?',
-      name: 'username',
-    },
-    {
-      type: 'password',
-      message: 'What is your password?',
-      name: 'password',
-    },
-    {
-      type: 'password',
-      message: 'Re-enter password to confirm:',
-      name: 'confirm',
-    },
-  ])
-  .then((response) =>
-    response.confirm === response.password
-      ? console.log('Success!')
-      : console.log('You forgot your password already?!')
-  );
+// TODO: add function to run SELECT DATABASE command and show table
+
+// function viewAllDepartments() {
+//     let sql = 'Select * FROM departments';
+//     connection.query(sql, (err, res) => {
+//         if (err) throw err;
+//         promptUser();
+//     });
+// };
+
+// function viewAllRoles() {
+//     let sql = 'Select * FROM roles;';
+//     connection.promise().query(sql, (err, res) => {
+//         if (err) throw err;
+//         promptUser();
+//     });
+// };
+
+// function viewAllEmployees() {
+//     let sql = 'Select * FROM employees;';
+//    connection.promise().query(sql, (err, res) => {
+//         if (err) throw err;
+//         promptUser();
+//     });
+// };
+
+// function addDepartment() {
+//   let sql = 'Select';
+//   connection.promise().query(sql, (err, res) => {
+//     if (err) throw err;
+//     promptUser();
+//   });
+// };
+
+// function addRole() {
+//   let sql = 'Select';
+//   connection.promise().query(sql, (err, res) => {
+//     if (err) throw err;
+//     promptUser();
+//   });
+// };
+
+// function addEmployee() {
+//   let sql = 'Select';
+//   connection.promise().query(sql, (err, res) => {
+//     if (err) throw err;
+//     promptUser();
+//   });
+// };
+
+// function updateEmployee() {
+//   let sql = 'Select';
+//   connection.promise().query(sql, (err, res) => {
+//     if (err) throw err;
+//     promptUser();
+//   });
+
+// module.exports.viewAllDepartments = viewAllDepartments;
