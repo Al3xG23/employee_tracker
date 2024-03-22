@@ -1,3 +1,4 @@
+-- Active: 1710296068509@@127.0.0.1@3306@employees1_db
 INSERT INTO employees (id, first_name, last_name)
 VALUES (001, "Tyler", "Duke"),
        (002, "Megan", "Stanley"),
