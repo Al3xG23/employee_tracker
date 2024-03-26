@@ -73,7 +73,7 @@ const getDepartments = () => {
 }
 
 const getAllRoles = () => {
-  let sql = 'SELECT * FROM roles';
+  let sql = 'SELECT CONCAT (title, ", salary: $", salary) AS roles FROM roles ORDER BY title';
   connection.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -82,7 +82,7 @@ const getAllRoles = () => {
 }
 
 const getAllEmployees = () => {
-  let sql = 'SELECT * FROM employees';
+  let sql = 'SELECT CONCAT (first_name, " ", last_name) AS full_name FROM employees ORDER BY last_name';
   connection.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -162,52 +162,54 @@ const addEmployee = () => {
 // TODO fix this code to update employee
 const updateEmployee = () => {
   let sql = 'SELECT employees.id, employees.first_name, employees.last_name, roles.id AS "role_id" FROM employees, roles WHERE roles.id = employees.role_id';
+  let employeesNames = [];
   connection.query(sql, (err, res) => {
     if (err) throw err;
-    let employeesNames = [];
-    res.forEach((employees) => {employeesNames.push(`${employees.first_name} ${employees.last_name}`);});
+    res.forEach((employees) => { employeesNames.push(`${employees.first_name} ${employees.last_name}`); });
 
-    let sql = 'SELECT roles.id, roles.title FROM roles';
-    connection.query(sql, (err, res) => {
-      if (err) throw err;
-      let chooseRoles = [];
-      res.forEach((roles) => {chooseRoles.push(roles.title);});
+        let sql = 'SELECT roles.id, roles.title FROM roles';
+        connection.query(sql, (err, res) => {
+          if (err) throw err;
+          let chooseRoles = [];
+          res.forEach((roles) => {chooseRoles.push(roles.title);});
+          console.log(chooseRoles);
 
-      inquirer
-        .prompt([
-          {
-            name: 'chosenName',
-            type: 'list',
-            message: 'Which employee would you like to update?',
-            choices: 'employeeNames'
-          },
-          {
-            name: 'chosenRole',
-            type: 'list',
-            message: 'Choose employees new role:',
-            choices: 'chooseRoles'
-          }
-        ])
-        .then((answer) => {
-          let newRoleId, employeesId;
+          inquirer
+            .prompt([
+              {
+                name: 'chosenName',
+                type: 'list',
+                message: 'Which employee would you like to update?',
+                choices: 'employeesNames'
+              },
+              {
+                name: 'chosenRole',
+                type: 'list',
+                message: 'Choose employees new role:',
+                choices: 'chooseRoles'
+              }
+            ])
+            .then((answer) => {
+              let newRoleId, employeesId;
 
-          res.forEach((employees) => {
-            if (answer.chosenName.options === `${employees.first_name}${employees.last_name}`) { employeesId = employees.id; }
-          });
-          res.forEach((roles) => {
-            if (answer.chosenRole.options === roles.title) { newRoleId = roles.id; }
-          });
+              res.forEach((employees) => {
+                if (answer.chosenName.options === `${employees.first_name}${employees.last_name}`) { employeesId = employees.id; }
+              });
+              res.forEach((roles) => {
+                if (answer.chosenRole.options === roles.title) { newRoleId = roles.id; }
+              });
 
-          let sql = 'UPDATE employees SET employees.role_id = ? WHERE employees.id = ?';
-          connection.query(sql, [newRoleId, employeesId], (err, res) => {
-            if (err) throw err;
-            console.log("'s role updated");
-            getAllEmployees();
-            promptUser();
-          });
+              let sql = 'UPDATE employees SET employees.role_id = ? WHERE employees.id = ?';
+              connection.query(sql, [newRoleId, employeesId], (err, res) => {
+                if (err) throw err;
+                console.log("'s role updated");
+                getAllEmployees();
+                promptUser();
+              });
+            });
         });
-    });
   });
+  console.log(employeesNames);
 };
 
 
