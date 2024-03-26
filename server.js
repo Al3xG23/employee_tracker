@@ -1,32 +1,30 @@
 const express = require('express');
 const inquirer = require('inquirer');
+const mysql = require('mysql2');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const mysql = require('mysql2');
-const connection = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: 'Help00$12',
-        database: 'employees1_db'
-    },
-    console.log(`Connected to the employees1_db database.`)
-);
-
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use((req, res) => {
-  res.status(404).end();
+const connection = mysql.createConnection(
+  {
+    host: 'localhost',
+    user: 'root',
+    password: 'Help00$12',
+    database: 'employees1_db'
+  });
+
+connection.connect(function (err) {
+  if (err) throw err;
+  console.log(`Connected to the employees1_db database.`);
+  promptUser();
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Prompt to get user choice
 
-function promptUser() {
+const promptUser = () => {
   inquirer
     .prompt([
       {
@@ -37,45 +35,136 @@ function promptUser() {
       },
     ])
 
-    .then((choices) => {      
-      if (choices === 'View all departments') {
-        viewAllDepartments();
+    .then((choices) => {
+      // console.log(choices)
+      if (choices.options === 'View all departments') {
+        getDepartments();
       }
-      if (choices === 'View all roles') {
-        viewAllRoles();
+      if (choices.options === 'View all roles') {
+        getAllRoles();
       }
-      if (choices === 'View all employees') {
-        viewAllEmployees();
+      if (choices.options === 'View all employees') {
+        getAllEmployees();
       }
-      if (choices === 'Add a department') {
+      if (choices.options === 'Add a department') {
         addDepartment();
       }
-      if (choices === 'Add a role') {
+      if (choices.options === 'Add a role') {
         addRole();
       }
-      if (choices === 'Add an employee') {
+      if (choices.options === 'Add an employee') {
         addEmployee();
       }
-      if (choices === 'Update an employee role') {
+      if (choices.options === 'Update an employee role') {
         updateEmployee();
       }
     });
 };
 
-promptUser();
+// Functions to show user choices
 
-function viewAllDepartments() {  
-  connection.query('Select * FROM departments', (err, result) => {
+const getDepartments = () => {
+  let sql = 'Select * FROM departments';
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);    
+    promptUser();
+  });
+}
+
+const getAllRoles = () => {
+  let sql = 'Select * FROM roles';
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    promptUser();
+  });
+}
+
+const getAllEmployees = () => {
+  let sql = 'Select * FROM employees';
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    promptUser();
+  });
+}
+
+const addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        name: 'newDepartment',
+        type: 'input',
+        message: 'Enter new department: ',
+      }
+    ])
+    .then((answer) => {
+      let sql = 'Insert Into departments (name) Values (?)';
+      connection.query(sql, answer.newDepartment, (err, res) => {
+        if (err) throw err;
+        console.log(answer.newDepartment + ' department created.');
+        getDepartments();
+      });
+    });
+};
+
+const addRole = () => {
+  inquirer
+  .prompt([
+    {
+      name: 'newRole',
+      type: 'input',
+      message: 'Enter new role: ',
+    },
+    {
+      name: 'salary',
+      type: 'input',
+      message: 'Enter salary for new role: '
+    }
+  ])
+  .then((answer) => {
+    let sql = 'Insert Into roles (title, salary) Values (?, ?)';
+    let addRole = [answer.newRole, answer.salary];
+    connection.query(sql, addRole, (err, res) => {
       if (err) throw err;
-      promptUser();
+      console.log(answer.newRole + ' role created with a salary of $' + answer.salary);
+      getAllRoles();
+    });
   });
 };
 
-module.exports.viewAllDepartments = viewAllDepartments;
+const addEmployee = () => {
+  inquirer
+  .prompt([
+    {
+      name: 'newEmployeeFirst',
+      type: 'input',
+      message: 'Enter new employee first name: ',
+    },
+    {
+      name: 'newEmployeeLast',
+      type: 'input',
+      message: 'Enter new employee last name : '
+    }
+  ])
+  .then((answer) => {
+    let sql = 'Insert Into employees (first_name, last_name) Values (?, ?)';
+    let addNewEmployee = [answer.newEmployeeFirst, answer.newEmployeeLast];
+    connection.query(sql, addNewEmployee, (err, res) => {
+      if (err) throw err;
+      console.log(answer.newEmployeeFirst + ' ' + answer.newEmployeeLast + ' added as new employee.');
+      getAllEmployees();
+    });
+  });
+};
 
-app.get('api/departments', function (req, res) {
-  connection.viewAllDepartments((err, result) => {
+const updateEmployee = () => {
+  let sql = 'Select';
+  connection.query(sql, (err, res) => {
     if (err) throw err;
-    console.log(result);    
-  })
-});
+    getAllEmployees();
+  });
+};
+
+
