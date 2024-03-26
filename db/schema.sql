@@ -6,12 +6,12 @@ CREATE DATABASE employees1_db;
 USE employees1_db;
 
 CREATE TABLE departments (
-  id INT PRIMARY KEY NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   name Varchar(30) NOT NULL
 );
 
 CREATE TABLE roles (
-  id INT PRIMARY KEY NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   title Varchar(30) NOT NULL,
   salary DECIMAL,
   department_id INT,  
@@ -21,7 +21,7 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE employees (
-  id INT PRIMARY KEY NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
   role_id INT,
