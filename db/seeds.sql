@@ -18,3 +18,4 @@ VALUES (001, "Manager", 250000.00),
        (002, "Research Assistant", 30000.00),
        (003, "Sales Representative", 50000.00),
        (004, "HR Manager", 100000.00);
+       

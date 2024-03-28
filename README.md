@@ -46,4 +46,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Link to Repo
 
+https://github.com/Al3xG23/employee_tracker
+
 ## Link to Walkthrough Video
+
