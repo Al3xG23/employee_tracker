@@ -50,3 +50,4 @@ https://github.com/Al3xG23/employee_tracker
 
 ## Link to Walkthrough Video
 
+https://drive.google.com/file/d/1_EgGtz8eajmZOX6VQR3zuaKrLEXopNqq/view
